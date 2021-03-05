@@ -3,9 +3,6 @@
 # CH_HOST=localhost
 # CH_USER=default
 # CH_PASS=
-#
-# can be run as: 
-# CH_CLIENT=clickhouse-client CH_HOST=localhost CH_USER=default CH_PASS= ./bench.sh 
 
 # Test specific
 # CH_DB=ssb
