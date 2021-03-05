@@ -24,30 +24,27 @@ CREATE TABLE ssb.lineorder_wide
     `C_NATION` LowCardinality(String),
     `C_REGION` Enum8('ASIA' = 0, 'AMERICA' = 1, 'AFRICA' = 2, 'EUROPE' = 3, 'MIDDLE EAST' = 4),
     `C_PHONE` String,
-    `C_MKTSEGMENT` String,
+    `C_MKTSEGMENT` LowCardinality(String),
     `S_SUPPKEY` UInt32,
-    `S_NAME` String,
-    `S_ADDRESS` String,
+    `S_NAME` LowCardinality(String),
+    `S_ADDRESS` LowCardinality(String),
     `S_CITY` LowCardinality(String),
-    `S_NATION` LowCardinality(String),
+    `S_NATION` String,
     `S_REGION` Enum8('ASIA' = 0, 'AMERICA' = 1, 'AFRICA' = 2, 'EUROPE' = 3, 'MIDDLE EAST' = 4),
-    `S_PHONE` String,
+    `S_PHONE` LowCardinality(String),
     `P_PARTKEY` UInt32,
-    `P_NAME` String,
+    `P_NAME` LowCardinality(String),
     `P_MFGR` Enum8('MFGR#2' = 0, 'MFGR#4' = 1, 'MFGR#5' = 2, 'MFGR#3' = 3, 'MFGR#1' = 4),
-    `P_CATEGORY` LowCardinality(String),
+    `P_CATEGORY` String,
     `P_BRAND` LowCardinality(String),
-    `P_COLOR` String,
-    `P_TYPE` String,
+    `P_COLOR` LowCardinality(String),
+    `P_TYPE` LowCardinality(String),
     `P_SIZE` UInt8,
-    `P_CONTAINER` String
+    `P_CONTAINER` LowCardinality(String)
 )
 ENGINE = MergeTree()
 PARTITION BY toYear(LO_ORDERDATE)
 PRIMARY KEY (S_REGION, C_REGION, P_MFGR, S_NATION, C_NATION, P_CATEGORY)
 ORDER BY (S_REGION, C_REGION, P_MFGR, S_NATION, C_NATION, P_CATEGORY, LO_CUSTKEY, LO_SUPPKEY)
-SETTINGS index_granularity = 8192;
-
- ALTER TABLE ssb.lineorder_wide ADD INDEX s_city S_CITY TYPE set(0) GRANULARITY 35;
- ALTER TABLE ssb.lineorder_wide ADD INDEX c_city C_CITY TYPE set(0) GRANULARITY 7;
- ALTER TABLE ssb.lineorder_wide ADD INDEX p_brand P_BRAND TYPE minmax GRANULARITY 4;
+SETTINGS index_granularity = 8192
+;
