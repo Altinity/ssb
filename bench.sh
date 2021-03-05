@@ -29,9 +29,8 @@ do
   do
     TESTTRY="$TESTID/$t"
     echo "/* $TESTTRY */ $TEST" | $CH_CLIENT -h $CH_HOST --port 9440 -s --user=$CH_USER --password=$CH_PASS --database=$CH_DB --log_queries=1 > /dev/null
-    $CH_CLIENT -h $CH_HOST --port 9440 -s --user=$CH_USER --password=$CH_PASS --database=$CH_DB --query="SYSTEM FLUSH LOGS"
-    $CH_CLIENT -h $CH_HOST --port 9440 -s --user=$CH_USER --password=$CH_PASS --database=$CH_DB --log_queries=0 \
-       --query="SELECT round(sum(query_duration_ms)/1000,3) FROM system.query_log where event_date=today() and type='QueryFinish' and query like '%$TESTTRY%'"
+    $CH_CLIENT -h $CH_HOST --port 9440 -s --user=$CH_USER --password=$CH_PASS --database=$CH_DB --log_queries=0 --multiquery \
+       --query="SYSTEM FLUSH LOGS; SELECT round(sum(query_duration_ms)/1000,3) FROM system.query_log where event_date=today() and type='QueryFinish' and query like '%$TESTTRY%';"
   done
   $CH_CLIENT -h $CH_HOST --port 9440 -s --user=$CH_USER --password=$CH_PASS --database=$CH_DB --log_queries=0 \
     --query="SELECT '$i avg:', round(sum(query_duration_ms)/1000/$TRIES,3) FROM system.query_log where event_date=today() and type='QueryFinish' and query like '%$TESTID%'"
