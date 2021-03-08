@@ -1,4 +1,4 @@
-CREATE TABLE ssb.lineorder_wide
+CREATE TABLE lineorder_wide
 (
     `LO_ORDERKEY` UInt32,
     `LO_LINENUMBER` UInt8,
@@ -43,8 +43,19 @@ CREATE TABLE ssb.lineorder_wide
     `P_CONTAINER` LowCardinality(String)
 )
 ENGINE = MergeTree()
-PARTITION BY toYear(LO_ORDERDATE)
+PARTITION BY toYYYYMM(LO_ORDERDATE)
 PRIMARY KEY (S_REGION, C_REGION, P_MFGR, S_NATION, C_NATION, P_CATEGORY)
-ORDER BY (S_REGION, C_REGION, P_MFGR, S_NATION, C_NATION, P_CATEGORY, LO_CUSTKEY, LO_SUPPKEY)
+ORDER BY    (S_REGION, C_REGION, P_MFGR, S_NATION, C_NATION, P_CATEGORY, LO_CUSTKEY, LO_SUPPKEY)
 SETTINGS index_granularity = 8192
 ;
+
+SET min_insert_block_size_bytes = '1G', min_insert_block_size_rows = 1048576, max_insert_threads = 16, max_threads = 16;
+
+INSERT INTO lineorder_wide
+SELECT * 
+  FROM lineorder LO
+  LEFT OUTER JOIN customer C ON (C_CUSTKEY = LO_CUSTKEY)
+  LEFT OUTER JOIN supplier S ON (S_SUPPKEY = LO_SUPPKEY)
+  LEFT OUTER JOIN part P ON (P_PARTKEY = LO_PARTKEY)
+;
+  

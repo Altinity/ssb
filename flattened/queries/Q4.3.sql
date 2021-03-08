@@ -3,7 +3,7 @@ SELECT
     S_CITY, 
     P_BRAND, 
     SUM(LO_REVENUE - LO_SUPPLYCOST) AS profit
-FROM lineorder
+FROM lineorder_wide
 WHERE (C_REGION = 'AMERICA') AND (S_NATION = 'UNITED STATES') AND (P_CATEGORY = 'MFGR#14') AND ((year = 1997) OR (year = 1998))
 GROUP BY 
     year, 
