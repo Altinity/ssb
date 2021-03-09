@@ -4,10 +4,7 @@ SELECT
   toYear(LO_ORDERDATE) AS year,
   SUM(LO_REVENUE) AS revenue
 FROM lineorder_wide
-WHERE  C_REGION = 'ASIA'
-  AND S_REGION = 'ASIA'
-  AND year  >= 1992
-  AND year  <= 1997
+WHERE C_REGION = 'ASIA' AND S_REGION = 'ASIA' AND year  >= 1992 AND year  <= 1997
 GROUP BY
   C_NATION,
   S_NATION,
